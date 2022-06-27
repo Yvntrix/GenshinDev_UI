@@ -14,17 +14,60 @@ import { DarkModeButton } from "./components/DarkModeButton";
 
 export default function CharacterInfo() {
   let { character } = useParams();
-  useEffect(() => {
-    getCharData();
-  }, []);
   const [details, setDetails] = useState<any[]>([]);
   let datas: any[] = [];
+  const [img, setImg] = useState(
+    "https://drive.google.com/uc?export=view&id=1yfF_o3ZXrE-AUVofm5kVk-SddtBp6HmM"
+  );
+  const [rgb, setRgb] = useState(`0,0,0,`);
+  useEffect(() => {
+    getCharData();
+    CheckImage(`https://api.genshin.dev/characters/${character}/gacha-splash`);
+  }, []);
+
+  function CheckImage(path: string) {
+    fetch(path, {
+      method: "HEAD",
+    })
+      .then((res) => {
+        if (res.ok) {
+          setImg(
+            `https://api.genshin.dev/characters/${character}/gacha-splash`
+          );
+        } else {
+          setImg(
+            "https://drive.google.com/uc?export=view&id=1yfF_o3ZXrE-AUVofm5kVk-SddtBp6HmM"
+          );
+        }
+      })
+      .catch((err) => console.log("Error:", err));
+  }
   const getCharData = () => {
     axios
       .get("https://api.genshin.dev/characters/" + character)
       .then(async (result) => {
         const data = await result.data;
         datas.push(data);
+
+        if (data.vision == "Pyro") {
+          setRgb(`240,62,62,`);
+        }
+        if (data.vision == "Geo") {
+          setRgb(`252,196,25,`);
+        }
+        if (data.vision == "Cryo") {
+          setRgb(`165,216,255,`);
+        }
+        if (data.vision == "Hydro") {
+          setRgb(`28,126,214,`);
+        }
+        if (data.vision == "Electro") {
+          setRgb(`190,75,219,`);
+        }
+        if (data.vision == "Anemo") {
+          setRgb(`99,230,190,`);
+        }
+
         setDetails(datas);
       });
   };
@@ -33,10 +76,10 @@ export default function CharacterInfo() {
     <Stack
       p="md"
       sx={{
+        backgroundColor: `rgba(${rgb}.3)`,
         minHeight: "100vh",
-        backgroundColor: "#141517",
-        backgroundImage: `linear-gradient(rgba(0,0,0,.97), rgba(0,0,0,.4)),
-        url(https://api.genshin.dev/characters/${character}/gacha-splash)`,
+        backgroundImage: `linear-gradient(rgba(0,0,0,.97), rgba(${rgb}.4)),
+        url(${img})`,
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",

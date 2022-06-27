@@ -2,6 +2,7 @@ import { Avatar, Container, Group, Paper, Stack, Text } from "@mantine/core";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 export default function CharacterCards() {
   const [detail, setDetail] = useState<any[]>([]);
@@ -34,36 +35,47 @@ export default function CharacterCards() {
       {detail.map((src, id) => {
         return (
           <div key={id}>
-            <Link
-              to={`characters/${src.name}`}
-              style={{ textDecoration: "none" }}
+            <motion.div
+              initial={{ opacity: 0, y: 50, scale: 0.8 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{
+                duration: 0.05,
+                delay: id * 0.05,
+                type: "tween",
+              }}
             >
-              <Paper
-                withBorder
-                radius="md"
-                p="xs"
-                shadow="sm"
-                sx={{
-                  minWidth: 144,
-                  transition: " transform .2s",
-                  "&:hover": {
-                    transform: " scale(1.05)",
-                  },
-                }}
+              <Link
+                to={`characters/${src.name}`}
+                style={{ textDecoration: "none" }}
               >
-                <Stack align="center">
-                  <Avatar
-                    radius="xl"
-                    size="xl"
-                    alt={src.name}
-                    src={src.imgsrc}
-                  />
-                  <Text transform="capitalize" align="center">
-                    {src.name}
-                  </Text>
-                </Stack>
-              </Paper>
-            </Link>
+                <Paper
+                  withBorder
+                  radius="md"
+                  p="xs"
+                  shadow="sm"
+                  sx={{
+                    minWidth: 144,
+                    backgroundImage: `linear-gradient(rgba(255,255,255,0), rgba(127,66,183,.3))`,
+                    transition: " transform .2s",
+                    "&:hover": {
+                      transform: " scale(1.05)",
+                    },
+                  }}
+                >
+                  <Stack align="center">
+                    <Avatar
+                      radius="xl"
+                      size="xl"
+                      alt={src.name}
+                      src={src.imgsrc}
+                    />
+                    <Text weight={700} transform="capitalize" align="center">
+                      {src.name}
+                    </Text>
+                  </Stack>
+                </Paper>
+              </Link>
+            </motion.div>
           </div>
         );
       })}
