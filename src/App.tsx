@@ -1,33 +1,14 @@
 import {
-  ColorScheme,
-  ColorSchemeProvider,
-  Container,
-  MantineProvider,
+  MantineProvider
 } from "@mantine/core";
-import { useHotkeys, useLocalStorage } from "@mantine/hooks";
-import CharacterCards from "./components/CharacterCards";
-import { Home } from "./Home";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import CharacterInfo from "./CharacterInfo";
+import { Home } from "./Home";
 function App() {
-  const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
-    key: "mantine-color-scheme",
-    defaultValue: "light",
-    getInitialValueInEffect: true,
-  });
-
-  const toggleColorScheme = (value?: ColorScheme) =>
-    setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
-
-  useHotkeys([["mod+J", () => toggleColorScheme()]]);
-
   return (
-    <ColorSchemeProvider
-      colorScheme={colorScheme}
-      toggleColorScheme={toggleColorScheme}
-    >
+
       <MantineProvider
-        theme={{ colorScheme }}
+        theme={{ colorScheme:"dark" }}
         withGlobalStyles
         withNormalizeCSS
       >
@@ -42,7 +23,6 @@ function App() {
           </Routes>
         </BrowserRouter>
       </MantineProvider>
-    </ColorSchemeProvider>
   );
 }
 

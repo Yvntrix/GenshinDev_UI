@@ -1,4 +1,5 @@
 import {
+  ActionIcon,
   Avatar,
   Center,
   Container,
@@ -11,10 +12,19 @@ import {
   Title,
 } from "@mantine/core";
 import axios from "axios";
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Star } from "tabler-icons-react";
-import { DarkModeButton } from "./components/DarkModeButton";
+import {
+  Affiliate,
+  ChevronLeft,
+  Gift,
+  Id,
+  Map,
+  NorthStar,
+  Star,
+  Sword,
+} from "tabler-icons-react";
 
 export default function CharacterInfo() {
   let { character } = useParams();
@@ -22,7 +32,7 @@ export default function CharacterInfo() {
   const [loading, setLoading] = useState(true);
   const [img, setImg] = useState("");
   const [rgb, setRgb] = useState(`0,0,0,`);
-  const [element, setElement] = useState("");
+  const [color, setColor] = useState(`dimmed`);
   let datas: any[] = [];
   useEffect(() => {
     getCharData();
@@ -58,25 +68,30 @@ export default function CharacterInfo() {
       .then(async (result) => {
         const data = await result.data;
         datas.push(data);
-        setElement(data.vision.toLowerCase());
 
         if (data.vision == "Pyro") {
           setRgb(`240,62,62,`);
+          setColor(`#f03e3e`);
         }
         if (data.vision == "Geo") {
           setRgb(`252,196,25,`);
+          setColor(`#fcc419`);
         }
         if (data.vision == "Cryo") {
           setRgb(`165,216,255,`);
+          setColor(`#A5D8FF`);
         }
         if (data.vision == "Hydro") {
           setRgb(`28,126,214,`);
+          setColor(`#1c7ed6`);
         }
         if (data.vision == "Electro") {
           setRgb(`190,75,219,`);
+          setColor(`#be4bdb`);
         }
         if (data.vision == "Anemo") {
           setRgb(`99,230,190,`);
+          setColor(`#63e6be`);
         }
 
         setDetails(datas);
@@ -87,7 +102,7 @@ export default function CharacterInfo() {
     <>
       {loading ? (
         <Center sx={{ minHeight: "100vh" }}>
-          <Loader color="violet" />
+          <Loader color={color} />
         </Center>
       ) : (
         <Stack
@@ -95,52 +110,37 @@ export default function CharacterInfo() {
           sx={{
             backgroundColor: `rgba(${rgb}.3)`,
             minHeight: "100vh",
-            backgroundImage: `linear-gradient(rgba(0,0,0,.97), rgba(${rgb}.3)) , url(${img})`,
+            backgroundImage: `linear-gradient(rgba(0,0,0,.98), rgba(${rgb}.3)) , url(${img})`,
             backgroundSize: "auto",
             backgroundRepeat: "no-repeat",
-            backgroundPosition: "center right",
+            backgroundPosition: "center bottom",
           }}
         >
-          <Group position="right">
-            <DarkModeButton />
+          <Group position="left">
+            <ActionIcon<"a"> variant="outline" component="a" href="/">
+              <ChevronLeft size={16} />
+            </ActionIcon>
           </Group>
-          <Container>
+          <Container size="xl">
             {details.map((info, id) => {
               return (
                 <div key={id}>
-                  <Text
-                    component="span"
-                    align="center"
-                    color={
-                      info.vision == "Cryo"
-                        ? "#A5D8FF"
-                        : info.vision == "Pyro"
-                        ? "#f03e3e"
-                        : info.vision == "Anemo"
-                        ? "#63e6be"
-                        : info.vision == "Electro"
-                        ? "#be4bdb"
-                        : info.vision == "Geo"
-                        ? "#fcc419"
-                        : info.vision == "Hydro"
-                        ? "#1c7ed6"
-                        : "dimmed"
-                    }
-                  >
+                  <Text component="span" align="center" color={color}>
                     <Title align="center"> {info.name}</Title>
                   </Text>
-                  <Group p="sm">
+                  <Group p="sm" position="center">
                     <Paper
                       radius="lg"
                       p="xs"
                       sx={{
                         background: "rgba(0, 0, 0, 0.4)",
+                        backdropFilter: "blur(5px)",
                         minHeight: 480,
                         minWidth: 270,
                         backgroundImage: `linear-gradient(rgba(255,255,255,0), rgba(${rgb}.3))`,
                       }}
                     >
-                      <Group position="apart">
+                      <Group position="apart" p="xs">
                         <Group align="center" spacing="xs" position="center">
                           <Text align="center" color="#ffe066" weight={700}>
                             {info.rarity}
@@ -176,8 +176,67 @@ export default function CharacterInfo() {
                             ? `https://api.genshin.dev/characters/${character}/gacha-splash`
                             : `https://api.genshin.dev/characters/${character}/portrait`
                         }
-                        withPlaceholder
                       />
+                    </Paper>
+                    <Paper
+                      radius="lg"
+                      p="xs"
+                      sx={{
+                        background: "rgba(0, 0, 0, 0.5)",
+                        backdropFilter: "blur(5px)",
+                        backgroundImage: `linear-gradient(rgba(255,255,255,0), rgba(${rgb}.3))`,
+                      }}
+                    >
+                      <Stack
+                        align="flex-start"
+                        justify="flex-start"
+                        spacing="xs"
+                        sx={{ minHeight: 480, maxWidth: 270, minWidth: 270 }}
+                      >
+                        <Group align="center" spacing="xs">
+                          <Id color={color} />
+                          <Text color={color} weight={550}>
+                            Description
+                          </Text>
+                        </Group>
+
+                        <Text>{info.description}</Text>
+                        <Group align="center" spacing="xs">
+                          <Affiliate color={color} />
+                          <Text color={color} weight={550}>
+                            Affiliation
+                          </Text>
+                        </Group>
+                        <Text>{info.affiliation}</Text>
+                        <Group align="center" spacing="xs">
+                          <Map color={color} />
+                          <Text color={color} weight={550}>
+                            Nation
+                          </Text>
+                        </Group>
+                        <Text>{info.nation}</Text>
+                        <Group align="center" spacing="xs">
+                          <Sword color={color} />
+                          <Text color={color} weight={550}>
+                            Weapon
+                          </Text>
+                        </Group>
+                        <Text>{info.weapon}</Text>
+                        <Group align="center" spacing="xs">
+                          <NorthStar color={color} />
+                          <Text color={color} weight={550}>
+                            Constellation
+                          </Text>
+                        </Group>
+                        <Text>{info.constellation}</Text>
+                        <Group align="center" spacing="xs">
+                          <Gift color={color} />
+                          <Text color={color} weight={550}>
+                            Birthday
+                          </Text>
+                        </Group>
+                        <Text>{dayjs(info.birthday).format("MMMM DD")}</Text>
+                      </Stack>
                     </Paper>
                   </Group>
                 </div>

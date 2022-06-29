@@ -1,13 +1,9 @@
 import { Container, Group, Stack, Text, Title } from "@mantine/core";
 import CharacterCards from "./components/CharacterCards";
-import { DarkModeButton } from "./components/DarkModeButton";
 
 export const Home = () => {
   return (
     <Stack p="md">
-      <Group position="right">
-        <DarkModeButton />
-      </Group>
       <Text
         component="span"
         align="center"
