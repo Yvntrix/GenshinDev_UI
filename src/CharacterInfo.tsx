@@ -34,6 +34,7 @@ export default function CharacterInfo() {
   const [rgb, setRgb] = useState(`0,0,0,`);
   const [color, setColor] = useState(`dimmed`);
   let datas: any[] = [];
+  let change =0;
   useEffect(() => {
     getCharData();
     CheckImage(`https://api.genshin.dev/characters/${character}/gacha-splash`);
